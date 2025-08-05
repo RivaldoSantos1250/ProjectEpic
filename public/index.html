@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador de Stats Valorant</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; color: #333; padding: 2em; }
+        #container { max-width: 600px; margin: auto; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        input { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; border: none; background-color: #ff4655; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        #resultado { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Buscar Estatísticas de Valorant</h1>
+        <input type="text" id="riotIdInput" placeholder="Digite o Riot ID (ex: SeuNick#BR1)">
+        <button onclick="buscarStats()">Buscar</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        async function buscarStats() {
+            const riotIdCompleto = document.getElementById('riotIdInput').value;
+            const resultadoDiv = document.getElementById('resultado');
+            
+            if (!riotIdCompleto.includes('#')) {
+                resultadoDiv.innerHTML = '<p style="color:red;">Formato inválido. Use Nome#TAG.</p>';
+                return;
+            }
+
+            resultadoDiv.innerHTML = '<p>Buscando...</p>';
+
+            const response = await fetch(`/api/valorant-stats?riotId=${encodeURIComponent(riotIdCompleto)}`);
+            const data = await response.json();
+
+            if (data.error) {
+                resultadoDiv.innerHTML = `<p style="color:red;"><b>Erro:</b> ${data.error}</p>`;
+            } else {
+                resultadoDiv.innerHTML = `
+                    <h2>${data.account.gameName}#${data.account.tagLine}</h2>
+                    <p><b>PUUID:</b> ${data.account.puuid}</p>
+                    <p><b>Nível da Conta:</b> ${data.accountDetails.accountLevel}</p>
+                    <p><img src="${data.accountDetails.card.small}" alt="Player Card" style="border-radius:8px;"></p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

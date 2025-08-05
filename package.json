@@ -1,0 +1,14 @@
+{
+  "name": "valorant-api-site",
+  "version": "1.0.0",
+  "description": "Site para buscar stats de Valorant",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
